@@ -11,11 +11,8 @@ function Navbar() {
 //     navigate("/login");
 //   };
 // const user = JSON.parse(localStorage.getItem("user"));
-  const user = {
-    name: "Vera Nwoye",
-    role: "Administrator",
-    avatar: "https://github.com/mdo.png",
-  };
+
+  const {user} = useContext(AuthContext);
 
   return (
     <header className="bg-white shadow flex justify-between items-center px-6 py-4 relative">
@@ -36,14 +33,14 @@ function Navbar() {
           className="flex items-center gap-3"
         >
           <img
-            src={user.avatar}
+            src="https://github.com/mdo.png"
             alt=""
             className="w-10 h-10 rounded-full"
           />
 
           <div className="text-left">
             <div className="font-semibold">
-              {user.name}
+              {user.username}
             </div>
 
             <div className="text-xs text-gray-500">

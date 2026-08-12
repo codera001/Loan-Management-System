@@ -6,6 +6,15 @@ export const loginUser = (data) =>
 export const registerUser = (data) =>
   API.post("/auth/register/", data);
 
+export const getMe = () =>
+  API.get("/auth/me/");
+
+export const refreshToken = (refresh) => {
+  return API.post("/auth/refresh/", {
+      refresh,
+    });
+  };
+
 // const res = await loginUser(form);
 
 // const access = res.data.access;

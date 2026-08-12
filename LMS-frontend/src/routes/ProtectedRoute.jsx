@@ -1,15 +1,31 @@
 import { useContext } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
-function ProtectedRoute({ children }) {
-  const { user } = useContext(AuthContext);
+function ProtectedRoute() {
+  const { user, loading } = useContext(AuthContext);
 
-  if (!user) {
-    return <Navigate to="/login" />;
+  console.log("ProtectedRoute:", {
+    user,
+    loading,
+  });
+
+  // Wait for authentication check to finish
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p>Loading...</p>
+      </div>
+    );
   }
 
-  return children;
+  // User isn't authenticated
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // User is authenticated
+  return <Outlet />;
 }
 
 export default ProtectedRoute;

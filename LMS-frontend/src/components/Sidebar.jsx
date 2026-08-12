@@ -43,7 +43,7 @@ const menu = [
 
 function Sidebar() {
   return (
-    <aside className="w-64 bg-slate-900 text-white flex flex-col min-h-screen shadow-xl">
+    <aside className="w-64 bg-sidebar-background text-white flex flex-col min-h-screen shadow-xl">
       <div className="p-6 border-b border-slate-700">
         <h1 className="text-3xl font-bold">LMS</h1>
         <p className="text-sm text-slate-400">
@@ -60,7 +60,7 @@ function Sidebar() {
             className={({ isActive }) =>
               `flex items-center gap-3 px-4 py-3 rounded-xl transition ${
                 isActive
-                  ? "bg-blue-600"
+                  ? "bg-sidebar-primary"
                   : "hover:bg-slate-800"
               }`
             }

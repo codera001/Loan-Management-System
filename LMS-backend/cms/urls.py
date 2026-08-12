@@ -8,7 +8,6 @@ router = DefaultRouter()
 router.register('customers', CustomerViewSet)
 router.register('loans', LoanViewSet)
 router.register('repayments', RepaymentViewSet)
-
 urlpatterns = router.urls
 
 # old

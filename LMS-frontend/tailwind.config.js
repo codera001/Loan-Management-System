@@ -8,6 +8,10 @@ export default {
   theme: {
     extend: {
       colors: {
+        sidebar:{
+         background: "#001040",
+         primary:"#1050F0",
+        },
         brand: {
           navy: "#071A4A",
           blue: "#2563EB",

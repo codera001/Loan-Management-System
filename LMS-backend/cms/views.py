@@ -9,8 +9,11 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from .decorators import unauthenticated_user, allowed_users
 from rest_framework import viewsets, generics
-from .serializers import CustomerSerializer, LoanSerializer, RepaymentSerializer, RegisterSerializer
-
+from .serializers import CustomerSerializer, LoanSerializer, RepaymentSerializer, RegisterSerializer, CustomTokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 # Create your views here.
 # serializers
 class CustomerViewSet(viewsets.ModelViewSet):
@@ -37,11 +40,27 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
 
 
+class MeView(APIView):
+    permission_classes = [IsAuthenticated]
 
+    def get(self, request):
+        user = request.user
 
+        # Get the user's first group
+        group = user.groups.first()
 
+        # Get group name as role
+        role = group.name if group else None
 
+        return Response({
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "role": role,
+        })
 
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
     
 # register new user
 # @unauthenticated_user

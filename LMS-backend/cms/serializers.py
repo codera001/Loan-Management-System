@@ -3,7 +3,8 @@ from .models import Customer, Loan, Repayment
 from decimal import Decimal
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
-
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework.exceptions import PermissionDenied
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
@@ -86,3 +87,33 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
 
         return user
+
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+
+    def validate(self, attrs):
+        # lets jwt check username and password
+        data = super().validate(attrs) 
+
+    #    gets the authenticated user
+        user = self.user
+
+        # Check if user belongs to a group
+        groups = user.groups.all()
+
+        if not groups.exists():
+            # stops the login
+            raise PermissionDenied(
+                "Your account has not been assigned a role yet. "
+                "Kindly contact the administrator."
+            )
+
+        # Get user's first group as role
+        data["user"] = {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "role": groups.first().name,
+        }
+
+        return data

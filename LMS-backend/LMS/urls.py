@@ -18,15 +18,19 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
+    # TokenObtainPairView,
     TokenRefreshView,
 )
-
+from cms.views import MeView, RegisterView, CustomTokenObtainPairView
 urlpatterns = [
     # path("", include('cms.urls')),
     # new
     path('api/', include('cms.urls')), 
     path("admin/", admin.site.urls),
-    path("api/auth/login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    # path("api/auth/login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("api/auth/login/", CustomTokenObtainPairView.as_view(), name="token_obtain_pair"
+    ),
     path("api/auth/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("api/auth/me/", MeView.as_view()),
+    path("api/auth/register/", RegisterView.as_view(), name="register"),
 ]

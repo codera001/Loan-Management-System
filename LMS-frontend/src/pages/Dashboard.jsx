@@ -41,9 +41,7 @@ function Dashboard() {
 
   }, []);
 
-  // =========================
   // LOAN CALCULATIONS
-  // =========================
 
   const totalLoans = loans.length;
 
