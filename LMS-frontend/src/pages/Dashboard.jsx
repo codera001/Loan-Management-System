@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { LoanAPI } from "../services/loanApi";
-
+import { CustomerAPI } from "../services/customerApi";
 import OverviewCard from "../components/dashboard/OverviewCard";
 import StatCard from "../components/dashboard/StatCard";
 import DisbursementChart from "../components/dashboard/DisbursmentChart";
@@ -11,34 +11,37 @@ import RecentActivities from "../components/dashboard/RecentActivities";
 function Dashboard() {
 
   const [loans, setLoans] = useState([]);
+  const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [error, setError] = useState("");
+  
   useEffect(() => {
-
-    const fetchLoans = async () => {
-
+    const fetchData = async () => {
       try {
+        setLoading(true);
 
-        const response = await LoanAPI.getAll();
+        const [customerResponse, loanResponse] =
+          await Promise.all([
+            CustomerAPI.getAll(),
+            LoanAPI.getAll(),
+          ]);
 
-        console.log("Loan data:", response.data);
+        console.log("Customers:", customerResponse.data);
+        console.log("Loans:", loanResponse.data);
 
-        setLoans(response.data);
+        setCustomers(customerResponse.data);
+        setLoans(loanResponse.data);
 
+        setError("");
       } catch (error) {
-
-        console.error("Failed to load loans:", error);
-
+        console.error("Failed to load data:", error);
+        setError("Failed to load customers.");
       } finally {
-
         setLoading(false);
-
       }
-
     };
 
-    fetchLoans();
-
+    fetchData();
   }, []);
 
   // LOAN CALCULATIONS
@@ -50,6 +53,11 @@ function Dashboard() {
   );
 
   const totalActiveLoans = activeLoans.length;
+  const defaultedLoans = loans.filter(
+    (loan) => loan.status?.toLowerCase() === "defaulted"
+  );
+
+  const totalDefaultedLoans = defaultedLoans.length;
 
   const totalAmount = loans.reduce(
     (sum, loan) => sum + Number(loan.amount || 0),
@@ -57,6 +65,10 @@ function Dashboard() {
   );
 
   const activeLoanAmount = activeLoans.reduce(
+    (sum, loan) => sum + Number(loan.amount || 0),
+    0
+  );
+  const defaultedLoanAmount = defaultedLoans.reduce(
     (sum, loan) => sum + Number(loan.amount || 0),
     0
   );
@@ -116,8 +128,8 @@ function Dashboard() {
 
           <OverviewCard
             title="Overdue Loans"
-            amount="0"
-            unit="0"
+            amount={defaultedLoanAmount.toLocaleString()}
+            unit={totalDefaultedLoans}
             color="red"
             icon="!"
           />

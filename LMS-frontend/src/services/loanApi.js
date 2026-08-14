@@ -9,5 +9,5 @@ export const LoanAPI = {
 
   update: (id, data) => API.put(`/loans/${id}/`, data),
 
-  delete: (id) => API.delete(`/loans/${id}/`),
+  deleteLoan: (id) => API.delete(`/loans/${id}/`),
 };
