@@ -8,10 +8,7 @@ const API = axios.create({
   },
 });
 
-// ============================
 // Request Interceptor
-// ============================
-
 API.interceptors.request.use(
   (req) => {
     const token = localStorage.getItem("token");
@@ -25,31 +22,34 @@ API.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// ============================
-// Response Interceptor/handles token expiration
-// ============================
-
+// Response Interceptor
 API.interceptors.response.use(
   (res) => res,
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response.status === 401 && !originalRequest._retry) {
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry
+    ) {
       originalRequest._retry = true;
 
       const refresh = localStorage.getItem("refresh");
 
       try {
         const res = await axios.post(
-          `${import.meta.env.VITE_API_URL}/auth/refresh/`,
+          `${import.meta.env.VITE_API_URL}auth/refresh/`,
           { refresh }
         );
 
         const newAccess = res.data.access;
+
         localStorage.setItem("token", newAccess);
 
         originalRequest.headers.Authorization = `Bearer ${newAccess}`;
+
         return API(originalRequest);
+
       } catch (err) {
         localStorage.clear();
         window.location.href = "/login";
