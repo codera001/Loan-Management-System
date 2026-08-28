@@ -93,7 +93,7 @@ function Login() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-sidebar-background">
-      <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
+      <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8 mx-6 md:mx-0 ">
         <h2 className="text-3xl font-bold text-center mb-6">LMS LOGIN</h2>
 
         {error && (

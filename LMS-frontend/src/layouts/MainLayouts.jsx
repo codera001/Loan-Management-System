@@ -4,15 +4,17 @@ import Navbar from "../components/Navbar";
 
 function MainLayout() {
   return (
-    <div className="flex bg-gray-100">
+    <div className="flex  min-h-screen bg-gray-100">
 
       <Sidebar />
 
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-w-0 md:ml-64">
 
-        <Navbar />
+       
+        <Navbar /> 
+       
 
-        <main className="p-6 flex-1">
+        <main className="p-6  pt-24 md:pt-25 flex-1">
           <Outlet />
         </main>
 
